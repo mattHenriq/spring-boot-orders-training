@@ -5,11 +5,15 @@ import com.training.orders.dto.OrderResponse;
 import com.training.orders.entity.Order;
 import com.training.orders.enums.OrderStatus;
 import com.training.orders.repository.OrderRepository;
+import com.training.orders.exception.OrderNotFoundException;
+
 
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
+
+
 
 @Service
 public class OrderService {
@@ -39,11 +43,7 @@ public class OrderService {
             return toResponse(saveOrder);
         }
 
-        public OrderResponse findById(Long id) {
-            throw new UnsupportedOperationException("EXERCÍCIO: implemente este método");
-        }
-
-        private OrderResponse toResponse(Order order) {
+private OrderResponse toResponse(Order order) {
             OrderResponse response = new OrderResponse();
             response.setId(order.getId());
             response.setType(order.getType());
@@ -57,6 +57,16 @@ public class OrderService {
             return response;
 
         }
+
+        public OrderResponse getOrderById(long id){
+            Order order = repository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+
+            return toResponse(order);    
+        }
+
+
+
 
     // EXERCÍCIO: implemente cancelOrder(Long id)
     // Regras:
